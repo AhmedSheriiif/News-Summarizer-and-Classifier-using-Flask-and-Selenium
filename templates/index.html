@@ -1,0 +1,164 @@
+{% extends 'template.html' %}
+{% block body %}
+<!-- Start main panel -->
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-5 main-panel">
+            <div class="panel-tabs">
+                <ul class="nav nav-tabs" role="tablist">
+                    <li role="presentation" class="col-md-4 active">
+                        <div class="inner"><a href="#write_text" aria-controls="write_text" role="tab" data-toggle="tab"><i class="ion-ios-paper"></i><h4>Write text</h4></a></div>
+                    </li>
+                    <li role="presentation" class="col-md-4">
+                        <div class="inner"><a href="#get_from_link" aria-controls="get_from_link" role="tab" data-toggle="tab"><i class="ion-ios-world"></i><h4>Online News</h4></a></div>
+                    </li>
+                </ul>
+
+                <div class="tab-content">
+                    <div role="tabpanel" class="tab-pane fade in component-box active" id="write_text">
+                        <form  method="POST">
+                                <p id="out_summary" dir="rtl" lang="ar" ></p></p>
+                           
+                                <label>Enter Your Text</label>
+                                <textarea name="text_input_text" id="text_input_text" cols="70" rows="10" placeholder="Type your text here to summarize and get category..." required autocomplete="off"></textarea>
+                                
+
+                                <div class="input-area">
+                                    <label>Select Classifier</label>
+                                    <div class="radio-group">
+                                        <input type="radio" name="text_classifier" id="text_kmeans" value="kmeans" checked />
+                                        <label for="text_kmeans">KMeans Model</label>
+                                        <input type="radio" name="text_classifier" id="text_random_forest" value="random_forest_model" />
+                                        <label for="text_random_forest">Random Forest</label>
+                                        <input type="radio" name="text_classifier" id="text_logistic_regression" value="logistic_regression_model" />
+                                        <label for="text_logistic_regression">Logistic Regression</label>
+                                    </div> <!-- .radio-group -->
+                                    <div class="radio-group">
+                                        <input type="radio" name="text_classifier" id="text_ridge_model" value="ridge_model"  />
+                                        <label for="text_ridge_model">Ridge Model</label>
+                                        <input type="radio" name="text_classifier" id="text_gaussian_nb" value="gaussian_nb_model" />
+                                        <label for="text_gaussian_nb">Gaussian Nb</label>
+                                        <input type="radio" name="text_classifier" id="text_decision_tree" value="decision_tree_model" />
+                                        <label for="text_decision_tree">Decision Tree</label>
+                                    </div> <!-- .radio-group -->
+                                </div> <!-- .input-area -->
+                            <div class="input-area">
+                                <label>How Many Sentences?</label>
+                                <div class="number">
+                                    <span class="minus"><i class="ion-ios-arrow-down"></i></span>
+                                    <input type="text" name="text_sentences_number" value="5" />
+                                    <span class="plus"><i class="ion-ios-arrow-up"></i></span>
+                                </div>
+                            </div> <!-- .input-area -->
+                            <!-- <input type="submit" value="Get Summary & Category" /> -->
+                            <button class="btn btn-lg btn-primary btn-block" id='os' type="button">Get Summary & Category </button>
+
+                        </form>
+
+                    </div> <!-- #write_text -->
+
+                    <div role="tabpanel" class="tab-pane fade component-box" id="get_from_link">
+                        <form action="http://localhost:5000/analyze_url" method="POST">
+                            <div class="input-area">
+                                <label>Select News_Paper</label>
+                                <div class="radio-group">
+                                    <input type="radio" name="url_language" id="url_lang_english" value="english" checked />
+                                    <label for="url_lang_english">Youm7 News_Paper</label>
+                                    <input type="radio" name="url_language" id="url_lang_arabic" value="arabic" />
+                                    <label for="url_lang_arabic">Elmasry Elyom News_Paper</label>
+                                </div> <!-- .radio -->
+                            </div> <!-- .input-area -->
+
+                            <!-- <div class="input-area">
+                                <label>2. Enter A Link</label>
+                                <input type="text" name="url_input_text" placeholder="Get text from external website..." required autocomplete="off"/>
+                            </div> --> <!-- input-area -->
+
+                             
+                            <div class="input-area">
+                                <label>How Many Sentences?</label>
+                                <div class="number">
+                                    <span class="minus"><i class="ion-ios-arrow-down"></i></span>
+                                    <input type="text" name="url_sentences_number" value="10" />
+                                    <span class="plus"><i class="ion-ios-arrow-up"></i></span>
+                                </div>
+                            </div> <!-- .input-area -->
+                            <!-- <input type="submit" value="Get Summary & Category" /> -->
+                            <button class="btn btn-lg btn-primary btn-block" id='os' type="button">Get Summary & Category </button>
+                        </form>
+                    </div> <!-- #get_from_link -->
+                </div> <!-- .tab-content -->
+            </div> <!-- .panel-tabs -->
+        </div> <!-- .main-panel -->
+        {% if text_summary %}
+        <div class="output-panel col-md-7">
+            <form class="form-output"  method="post" >
+                <div class="component-box normal-input-text">
+                    <label>Your Input Text</label>
+                    <p id="out_input_text"></p>
+                </div>
+                <div class="component-box summary-text">
+                    <label>Text Summary</label>
+                    <p id="out_summary"></p>
+        
+                    <br />
+                    <label>Text category</label>
+                    <p id="out_category"></p>
+                
+                    <div class="category">
+                        {% if text_category == 'Sports' %}
+                            <span class="green active">Sports</span>
+                        {% endif %}
+                        {% if text_category == 'Economy' %}
+                            <span class="blue active">Economy</span>
+                        {% endif %}
+                        {% if text_category == 'Health' %}
+                            <span class="red active">Health</span>
+                        {% endif %}
+                        {% if text_category == 'Politics' %}
+                            <span class="green active">Politics</span>
+                        {% endif %}
+                        <!-- {% if text_category == 'Technology' %}
+                            <span class="red active">Technology</span>
+                        {% endif %} -->
+                    </div> <!-- .category -->
+                </div>
+            </form>
+        </div> <!-- .output-panel -->
+        {% else %}
+        <div class="welcome-panel col-md-7">
+            <img src="{{ url_for('static', filename='images/home-bg.svg') }}" alt="Welcome Screen" />
+
+        </div> <!-- .output-panel -->
+        
+        {% endif %}
+    </div> <!-- .row -->
+</div>
+
+<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+
+<script>
+    $(function() {
+       $('button').click(function() {
+           $.ajax({
+               url: '/analyze',
+               data: $('form').serialize(),
+               type: 'POST',
+               success: function(response) {
+                   x_summary=document.getElementById("out_summary")
+                  
+                    
+                   x_summary.innerHTML=response
+                   
+
+                  
+               },
+               error: function(error) {
+                   console.log(error);
+               }
+           });
+       });
+   });
+   </script>
+<!-- End main panel -->
+{% endblock %}
